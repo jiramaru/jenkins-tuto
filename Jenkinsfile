@@ -29,6 +29,7 @@ pipeline {
                 echo 'Running tests...'
                 '''
             }
+        }
      }
 }
 
