@@ -5,10 +5,11 @@ properties([
 ])
 
 pipeline {
+pipeline {
     agent any
 
     stages {
-        stage("Build") {
+        stage('Install') {
             agent {
                 docker {
                     image 'node:25-alpine'
@@ -16,26 +17,68 @@ pipeline {
                 }
             }
             steps {
-                sh '''
-                echo 'Building the application...'
-                ls -la
-                node --version
-                npm --version
-                npm ci
-                npm run build
-                ls -la
-                '''
-                
-              }
-          }
-        stage("Test") {
+                sh 'npm ci'
+            }
+        }
 
+        stage('Lint') {
+            agent {
+                docker {
+                    image 'node:25-alpine'
+                    reuseNode true
+                }
+            }
             steps {
+                sh 'npm run lint'
+            }
+        }
+
+        stage('Test') {
+            agent {
+                docker {
+                    image 'node:25-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh 'npm run test'
+            }
+        }
+
+        stage('Build Artifacts') {
+            agent {
+                docker {
+                    image 'node:25-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh 'npm run build'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying to local Docker container...'
                 sh '''
-                echo 'Running tests...'
+                # Build the production image
+                docker build -t jenkins-tuto .
+                
+                # Stop and remove existing container if it exists
+                docker stop jenkins-tuto || true
+                docker rm jenkins-tuto || true
+                
+                # Run the new container
+                docker run -d --name jenkins-tuto -p 3000:3000 jenkins-tuto
                 '''
             }
         }
-     }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
 }
 

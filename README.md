@@ -29,8 +29,37 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Testing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project uses [Vitest](https://vitest.dev/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Run tests once:
+```bash
+npm run test
+```
+
+Run tests in watch mode:
+```bash
+npm run test:ui
+```
+
+## CI/CD Pipeline
+
+A `Jenkinsfile` is included for automation. The pipeline includes the following stages:
+1. **Install**: Installs dependencies using `npm ci`.
+2. **Lint**: Checks for code quality issues.
+3. **Test**: Runs the unit test suite.
+4. **Build**: Creates a production-ready build.
+5. **Post-Build**: Clean-up and final checks.
+
+### Docker Support
+
+A multi-stage `Dockerfile` is provided for containerization, optimizing the build for production.
+
+To build the image locally:
+```bash
+docker build -t jenkins-tuto .
+```
+
+## Learn More
+...
