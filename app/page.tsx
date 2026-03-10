@@ -12,7 +12,7 @@ export default function Home() {
           Welcome to <span className="text-blue-600">Jenkins</span>
         </h1>
         <p className="mt-6 text-lg text-gray-500 dark:text-gray-300">
-          App version: 1.0.0
+          App version: 1.0.2
         </p>
       </main>
     </div>
