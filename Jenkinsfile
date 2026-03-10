@@ -63,7 +63,15 @@ pipeline {
                 # Build the production image
                 docker build -t jenkins-tuto .
                 
-                # Stop and remove existing container if it exists
+                # Stop and remove existing container using port 3000
+                EXISTING_CONTAINER=$(docker ps -q --filter "publish=3000")
+                if [ ! -z "$EXISTING_CONTAINER" ]; then
+                    echo "Stopping container $EXISTING_CONTAINER using port 3000..."
+                    docker stop $EXISTING_CONTAINER
+                    docker rm $EXISTING_CONTAINER
+                fi
+                
+                # Also ensure jenkins-tuto name is free
                 docker stop jenkins-tuto || true
                 docker rm jenkins-tuto || true
                 
